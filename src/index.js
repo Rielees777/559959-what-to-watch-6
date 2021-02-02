@@ -8,7 +8,6 @@ const filmInfo = {
 };
 
 ReactDOM.render(
-
   <App genre={filmInfo.genre} releaseDate={filmInfo.releaseDate} />,
   document.querySelector(`#root`)
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FilmCard = (props) => {
+const FilmCard = () => {
   return (
     <article className="small-movie-card catalog__movies-card">
       <div className="small-movie-card__image">
