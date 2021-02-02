@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FilmCard from '../film-card/film-card';
 
 const MainPage = (props) => {
@@ -129,4 +130,8 @@ const MainPage = (props) => {
   );
 };
 
+MainPage.propTypes = {
+  genre: PropTypes.string.isRequired,
+  releaseDate: PropTypes.number.isRequired
+}
 export default MainPage;
