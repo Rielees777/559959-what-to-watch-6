@@ -8,8 +8,8 @@ module.exports = {
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
-    open: false,
-    port: 1337,
+    open: true,
+    port: 8080,
   },
   module: {
     rules: [
