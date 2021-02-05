@@ -17,6 +17,9 @@ const App = (props) => {
         <Route exact path="/">
           <MainPage genre={genre} releaseDate={releaseDate} />
         </Route>
+        <Route exact path="/login">
+          <SignIn />
+        </Route>
         <Route exact path="/films/1/review">
           <AddReview />
         </Route>
