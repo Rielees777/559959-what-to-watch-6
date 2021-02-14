@@ -1,121 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {useParams} from 'react-router-dom';
 
-const FilmDetail = (props) => {
-  const {genre, released, director, starring, runtime} = props.film;
-  return (
-    <div className="movie-card__desc">
-      <nav className="movie-nav movie-card__nav">
-        <ul className="movie-nav__list">
-          <li className="movie-nav__item">
-            <a href="#" className="movie-nav__link">Overview</a>
-          </li>
-          <li className="movie-nav__item movie-nav__item--active">
-            <a href="#" className="movie-nav__link">Details</a>
-          </li>
-          <li className="movie-nav__item">
-            <a href="#" className="movie-nav__link">Reviews</a>
-          </li>
-        </ul>
-      </nav>
-      <div className="movie-card__text movie-card__row">
-        <div className="movie-card__text-col">
-          <p className="movie-card__details-item">
-            <strong className="movie-card__details-name">Director</strong>
-            <span className="movie-card__details-value">{director}</span>
-          </p>
-          <p className="movie-card__details-item">
-            <strong className="movie-card__details-name">Starring</strong>
-            <span className="movie-card__details-value">
-              {starring + `,` + <br/>}
-            </span>
-          </p>
-        </div>
 
-        <div className="movie-card__text-col">
-          <p className="movie-card__details-item">
-            <strong className="movie-card__details-name">Run Time</strong>
-            <span className="movie-card__details-value">{runtime}</span>
-          </p>
-          <p className="movie-card__details-item">
-            <strong className="movie-card__details-name">Genre</strong>
-            <span className="movie-card__details-value">{genre}</span>
-          </p>
-          <p className="movie-card__details-item">
-            <strong className="movie-card__details-name">Released</strong>
-            <span className="movie-card__details-value">{released}</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const FilmReviews = (props) => {
-  const {user, comment, rating, date} = props;
-  return (
-    <div className="movie-card__desc">
-      <nav className="movie-nav movie-card__nav">
-        <ul className="movie-nav__list">
-          <li className="movie-nav__item">
-            <a href="#" className="movie-nav__link">Overview</a>
-          </li>
-          <li className="movie-nav__item">
-            <a href="#" className="movie-nav__link">Details</a>
-          </li>
-          <li className="movie-nav__item movie-nav__item--active">
-            <a href="#" className="movie-nav__link">Reviews</a>
-          </li>
-        </ul>
-      </nav>
-
-      <div className="movie-card__reviews movie-card__row">
-        <div className="movie-card__reviews-col">
-          {props.map((id) => (
-            <div key={id} className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">{comment}</p>
-
-                <footer className="review__details">
-                  <cite className="review__author">{user.name}</cite>
-                  <time className="review__date" dateTime="2016-12-24">{date}</time>
-                </footer>
-              </blockquote>
-              <div className="review__rating">{rating}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="movie-card__reviews-col">
-        {props.map((id) => (
-          <div key={id} className="review">
-            <blockquote className="review__quote">
-              <p className="review__text">{comment}</p>
-
-              <footer className="review__details">
-                <cite className="review__author">{user.name}</cite>
-                <time className="review__date" dateTime="2016-12-24">{date}</time>
-              </footer>
-            </blockquote>
-            <div className="review__rating">{rating}</div>
-          </div>
-        ))}
-        <blockquote className="review__quote">
-          <p className="review__text">It is certainly a magical and childlike way of storytelling, even if the content is a little more adult.</p>
-
-          <footer className="review__details">
-            <cite className="review__author">Paula Fleri-Soler</cite>
-            <time className="review__date" dateTime="2016-12-20">December 20, 2016</time>
-          </footer>
-        </blockquote>
-
-        <div className="review__rating">7,0</div>
-      </div>
-    </div>
-  );
-};
 const Film = (props) => {
-  const {films, reviews} = props;
+  const {films} = props;
   let {filmId} = useParams();
   const {id, name, posterImage, backgroundImage, description, genre, released, rating, scoresCount, director, starring} = films[filmId];
   const additionalFilms = films.slice(0, 4);
@@ -248,6 +137,25 @@ const Film = (props) => {
       </div>
     </React.Fragment>
   );
+};
+Film.propTypes = {
+  films: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        posterImage: PropTypes.string.isRequired,
+        backgroundImage: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        genre: PropTypes.string.isRequired,
+        released: PropTypes.number.isRequired,
+        rating: PropTypes.number.isRequired,
+        scoresCount: PropTypes.number.isRequired,
+        director: PropTypes.string.isRequired,
+        starring: PropTypes.string.isRequired,
+      })
+  ),
+  reviews: PropTypes.array.isRequired,
+
 };
 
 export default Film;
