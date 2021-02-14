@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app/app';
+import films from './mocks/films';
+import reviews from './mocks/reviews';
 
-const filmInfo = {
-  genre: `Horror`,
-  releaseDate: 2020
-};
 
 ReactDOM.render(
     <App
-      genre={filmInfo.genre}
-      releaseDate={filmInfo.releaseDate}
+      films={films}
+      reviews={reviews}
     />,
     document.querySelector(`#root`)
 );
