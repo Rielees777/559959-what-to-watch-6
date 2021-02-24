@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {VIDEO_DELAY} from '../../const';
 import PropTypes from 'prop-types';
 
@@ -7,23 +7,33 @@ let timerId = null;
 const VideoPlayer = ({src, poster}) => {
 
   const videoRef = useRef();
+  const [videoStart, setStartVideo] = useState(false);
+  const [videoReset, setResetVideo] = useState(false);
 
-  const videoStart = () => {
-    timerId = setTimeout(() => {
-      videoRef.current.play();
-    }, VIDEO_DELAY);
-  };
+  useEffect(() => {
+    if (videoStart) {
+      timerId = setTimeout(() => {
+        videoRef.current.play();
+      }, VIDEO_DELAY);
+      return;
+    }
+  }, [videoStart]
+  );
 
-  const videoReset = () => {
-    clearTimeout(timerId);
-    videoRef.current.load();
-  };
+  useEffect(() => {
+    if (videoReset) {
+      clearTimeout(timerId);
+      videoRef.current.load();
+    }
+    return;
+  }, [videoReset]
+  );
 
   return (
     <div
       className="small-movie-card__image"
-      onMouseEnter={videoStart}
-      onMouseLeave={videoReset}
+      onMouseEnter={() => setStartVideo(!videoStart)}
+      onMouseLeave={() => setResetVideo(!videoReset)}
     >
       <video
         poster={poster}
