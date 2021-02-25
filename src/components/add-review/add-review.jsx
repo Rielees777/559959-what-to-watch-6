@@ -11,7 +11,7 @@ const AddReview = ({films, reviews}) => {
 
   const [rating, setRating] = useState(1);
   const handleRatingChange = (evt) => {
-    // evt.preventDefault();
+
     setRating(parseInt(evt.target.value, 10));
   };
 
