@@ -7,9 +7,16 @@ import GenreFilter from '../genre-filter/genre-filter';
 const MainPage = (props) => {
   const {firstFilm, currentFilter, films} = props;
   const {name, posterImage, backgroundImage, genre, released} = firstFilm;
-  const filtredFilms = films.filter((film) => film.genre === currentFilter);
+  const filtredFilms = () => {
+    if (currentFilter === `All genres`) {
+      return films;
+    }
+    else {
+      return films.filter((film) => film.genre === currentFilter);
+    }
+  };
 
-  console.log(filtredFilms);
+  console.log(filtredFilms());
 
   return (
     <React.Fragment>
@@ -74,7 +81,7 @@ const MainPage = (props) => {
 
           <GenreFilter />
 
-          <FilmsList films={films}/>
+          <FilmsList films={filtredFilms()}/>
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
