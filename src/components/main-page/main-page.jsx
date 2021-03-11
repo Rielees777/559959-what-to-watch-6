@@ -10,13 +10,10 @@ const MainPage = (props) => {
   const filtredFilms = () => {
     if (currentFilter === `All genres`) {
       return films;
-    }
-    else {
+    } else {
       return films.filter((film) => film.genre === currentFilter);
     }
   };
-
-  console.log(filtredFilms());
 
   return (
     <React.Fragment>
@@ -108,6 +105,7 @@ const MainPage = (props) => {
 
 MainPage.propTypes = {
   films: PropTypes.array.isRequired,
+  currentFilter: PropTypes.string.isRequired,
   firstFilm: PropTypes.shape({
     name: PropTypes.string.isRequired,
     posterImage: PropTypes.string.isRequired,

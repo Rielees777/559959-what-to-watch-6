@@ -3,7 +3,7 @@ import {ActionType} from './action';
 
 const initialState = {
   currentFilter: `All genres`,
-  films: films,
+  films
 };
 
 const reducer = (state = initialState, action) => {
