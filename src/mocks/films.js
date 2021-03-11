@@ -14,7 +14,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 99,
-    genre: `Comedy`,
+    genre: `Comedies`,
     released: 2014,
     isFavorite: false
   },
@@ -33,7 +33,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Leonardo Di'Caprio`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 109,
-    genre: `Comedy`,
+    genre: `Dramas`,
     released: 2018,
     isFavorite: false
   },
@@ -52,7 +52,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 89,
-    genre: `Comedy`,
+    genre: `Romance`,
     released: 2015,
     isFavorite: false
   },
@@ -71,7 +71,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 90,
-    genre: `Comedy`,
+    genre: `Comedies`,
     released: 2004,
     isFavorite: false
   },
@@ -90,7 +90,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 121,
-    genre: `Comedy`,
+    genre: `Sci-Fi`,
     released: 2007,
     isFavorite: false
   },
@@ -109,7 +109,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 101,
-    genre: `Comedy`,
+    genre: `Crime`,
     released: 2010,
     isFavorite: false
   },
@@ -128,7 +128,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 115,
-    genre: `Comedy`,
+    genre: `Crime`,
     released: 2011,
     isFavorite: false
   },
@@ -147,7 +147,7 @@ export default [
     director: `Wes Andreson`,
     starring: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`, `Saoirse Ronan`],
     runTime: 124,
-    genre: `Comedy`,
+    genre: `Comedies`,
     released: 2013,
     isFavorite: false
   }
