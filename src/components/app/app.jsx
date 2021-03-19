@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MainPage from '../main-page/main-page';
 import {Switch, Route, BrowserRouter} from 'react-router-dom';
+import PrivateRoute from '../private-route/private-route';
 import AddReview from '../add-review/add-review';
 import Film from '../films-description/film-description';
 import MyList from '../my-list/my-list';
@@ -10,28 +11,26 @@ import SignIn from '../sign-in/sign-in';
 import PageNotFound from '../page-not-found/page-not-found';
 
 
-const App = (props) => {
-  const {films, reviews} = props;
-  const [firstFilm] = films;
+const App = () => {
 
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
-          <MainPage firstFilm={firstFilm} films={films}/>
+          <MainPage />
         </Route>
         <Route exact path="/login">
           <SignIn />
         </Route>
-        <Route exact path="/films/:filmId/addreview">
-          <AddReview films={films} reviews={reviews} />
-        </Route>
+        <PrivateRoute exact path="/films/:filmId/addreview">
+          <AddReview />
+        </PrivateRoute>
         <Route exact path="/films/:filmId">
-          <Film films={films} onInput={() => {}}/>
+          <Film onInput={() => {}}/>
         </Route>
-        <Route exact path="/mylist">
+        <PrivateRoute exact path="/mylist">
           <MyList />
-        </Route>
+        </PrivateRoute>
         <Route exact path="/player/:id">
           <Player />
         </Route>
@@ -43,9 +42,6 @@ const App = (props) => {
   );
 };
 
-App.propTypes = {
-  films: PropTypes.array.isRequired,
-  reviews: PropTypes.array.isRequired,
-};
+App.propTypes = {};
 
 export default App;
