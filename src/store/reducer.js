@@ -27,6 +27,12 @@ const reducer = (state = initialState, action) => {
         promoFilm: action.payload,
         isPromoFilmLoaded: true
       };
+    case ActionType.LOAD_AUTH_INFO:
+      return {
+        ...state,
+        authInfo: action.payload,
+        isAuthInfoLoaded: true
+      };
     case ActionType.REQUIRED_AUTHORIZATION:
       return {
         ...state,
