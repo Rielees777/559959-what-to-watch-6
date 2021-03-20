@@ -71,7 +71,7 @@ MainPage.propTypes = {
 const mapStateToProps = (state) => ({
   films: state.films,
   isFilmsLoaded: state.isFilmsLoaded,
-  currentFilter: state.currentFilter
+  currentFilter: state.currentFilter,
 });
 
 const mapDispatchToProps = (dispatch) => ({
