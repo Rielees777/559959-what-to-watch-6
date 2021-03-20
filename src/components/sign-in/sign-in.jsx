@@ -17,7 +17,7 @@ const SignIn = ({onSubmit}) => {
       login: loginRef.current.value,
       password: passwordRef.current.value,
     });
-    history.push(`/`)
+    history.push(`/`);
   };
   return (
     <React.Fragment>

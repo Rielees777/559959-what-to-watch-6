@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import MainPage from '../main-page/main-page';
 import {Switch, Route, BrowserRouter} from 'react-router-dom';
 import PrivateRoute from '../private-route/private-route';

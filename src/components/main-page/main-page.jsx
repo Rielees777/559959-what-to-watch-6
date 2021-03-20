@@ -11,11 +11,8 @@ const MainPage = (props) => {
   const {currentFilter, films, isFilmsLoaded, onLoadFilms} = props;
 
   useEffect(() => {
-
     onLoadFilms();
-
   }, [onLoadFilms]);
-
 
   const filtredFilms = () => {
     if (currentFilter === `All genres`) {

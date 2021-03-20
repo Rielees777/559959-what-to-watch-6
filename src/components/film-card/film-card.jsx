@@ -2,14 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import VideoPlayer from '../video-payer/video-player';
 
-const FilmCard = ({name, preview_image, preview_video_link}) => {
+const FilmCard = (films) => {
 
+
+  const adaptToClient = (film) =>{
+    const adaptedFilm = Object.assign(
+        {},
+        films,
+        {
+          previewImage: film.preview_image,
+          previewVideoLink: film.preview_video_link
+        }
+    );
+    delete adaptedFilm.background_image;
+    delete adaptedFilm.poster_image;
+
+    return adaptedFilm;
+  };
+  const {name, previewImage, previewVideoLink} = adaptToClient(films);
   return (
     <article className="small-movie-card catalog__movies-card">
 
       <VideoPlayer
-        poster={preview_image}
-        src={preview_video_link} />
+        poster={previewImage}
+        src={previewVideoLink} />
 
       <h3 className="small-movie-card__title">
         <a

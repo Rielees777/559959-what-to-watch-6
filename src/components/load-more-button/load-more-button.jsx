@@ -1,12 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const LoadMoreButton = () => {
+const LoadMoreButton = ({onClickLoadMoreButton}) => {
   return (
     <div className="catalog__more">
-      <button className="catalog__button" type="button">Show more</button>
+      <button
+        onClick={onClickLoadMoreButton}
+        className="catalog__button"
+        type="button">Show more</button>
     </div>
   );
 };
 
+LoadMoreButton.propTypes = {
+  onClickLoadMoreButton: PropTypes.func.isRequired
+};
 export default LoadMoreButton;
