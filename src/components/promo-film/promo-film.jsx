@@ -3,8 +3,11 @@ import {connect} from 'react-redux';
 import {fetchPromoFilm} from '../../store/api-actions';
 import PropTypes from 'prop-types';
 import LoadingScreen from '../loading/loading';
+import GuestUser from '../guest-user/guest-user';
+import AuthorizedUser from '../authorized-user/authorized-user';
+import {AuthorizationStatus} from '../../const';
 
-const PromoFilm = ({promoFilm, isPromoFilmLoaded, onLoadPromoFilm}) => {
+const PromoFilm = ({promoFilm, isPromoFilmLoaded, onLoadPromoFilm, authorizationStatus}) => {
   useEffect(() => {
     onLoadPromoFilm();
   }, [onLoadPromoFilm]
@@ -48,11 +51,8 @@ const PromoFilm = ({promoFilm, isPromoFilmLoaded, onLoadPromoFilm}) => {
           </a>
         </div>
 
-        <div className="user-block">
-          <div className="user-block__avatar">
-            <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-          </div>
-        </div>
+        {authorizationStatus === AuthorizationStatus.NO_AUTH
+          ? <GuestUser /> : <AuthorizedUser />}
       </header>
       <div className="movie-card__wrap">
         <div className="movie-card__info">
@@ -98,12 +98,14 @@ PromoFilm.propTypes = {
     released: PropTypes.number.isRequired
   }),
   isPromoFilmLoaded: PropTypes.bool.isRequired,
-  onLoadPromoFilm: PropTypes.func.isRequired
+  onLoadPromoFilm: PropTypes.func.isRequired,
+  authorizationStatus: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => ({
   promoFilm: state.promoFilm,
   isPromoFilmLoaded: state.isPromoFilmLoaded,
+  authorizationStatus: state.authorizationStatus
 });
 const mapDispatchToProps = (dispatch) => ({
   onLoadPromoFilm() {
