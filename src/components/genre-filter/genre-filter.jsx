@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {ActionCreator} from '../../store/action';
+import {changeGenre} from '../../store/action';
 import PropTypes from 'prop-types';
 
 // 1. changeGenre нужно передать в компонент в виде пропса
@@ -59,7 +59,7 @@ GenreFilter.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   changeGenre(genre) {
-    dispatch(ActionCreator.changeGenre(genre));
+    dispatch(changeGenre(genre));
   }
 });
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {fetchPromoFilm} from '../../store/api-actions';
 import PropTypes from 'prop-types';
 import LoadingScreen from '../loading/loading';
@@ -7,9 +7,13 @@ import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
 import {AuthorizationStatus} from '../../const';
 
-const PromoFilm = ({promoFilm, isPromoFilmLoaded, onLoadPromoFilm, authorizationStatus}) => {
+
+const PromoFilm = () => {
+  const {promoFilm, isPromoFilmLoaded, onLoadPromoFilm} = useSelector((state) => state.DATA);
+  const {authorizationStatus} = useSelector((state) => state.USER);
+  const dispatch = useDispatch();
   useEffect(() => {
-    onLoadPromoFilm();
+    dispatch(fetchPromoFilm());
   }, [onLoadPromoFilm]
   );
   if (!isPromoFilmLoaded) {
@@ -37,7 +41,7 @@ const PromoFilm = ({promoFilm, isPromoFilmLoaded, onLoadPromoFilm, authorization
   return (
     <React.Fragment>
       <div className="movie-card__bg">
-        <img src={backgroundImage} alt="The Grand Budapest Hotel" />
+        <img src={backgroundImage} alt={name} />
       </div>
 
       <h1 className="visually-hidden">WTW</h1>
@@ -102,16 +106,4 @@ PromoFilm.propTypes = {
   authorizationStatus: PropTypes.string.isRequired
 };
 
-const mapStateToProps = (state) => ({
-  promoFilm: state.promoFilm,
-  isPromoFilmLoaded: state.isPromoFilmLoaded,
-  authorizationStatus: state.authorizationStatus
-});
-const mapDispatchToProps = (dispatch) => ({
-  onLoadPromoFilm() {
-    dispatch(fetchPromoFilm());
-  }
-});
-
-export {PromoFilm};
-export default connect(mapStateToProps, mapDispatchToProps)(PromoFilm);
+export default PromoFilm;
