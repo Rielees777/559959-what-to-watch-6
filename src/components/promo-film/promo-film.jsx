@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchPromoFilm} from '../../store/api-actions';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LoadingScreen from '../loading/loading';
 import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
 import {AuthorizationStatus} from '../../const';
-
+import {adaptToClientFilm} from '../../services/adapted-films';
 
 const PromoFilm = () => {
   const {promoFilm, isPromoFilmLoaded, onLoadPromoFilm} = useSelector((state) => state.DATA);
@@ -21,22 +22,8 @@ const PromoFilm = () => {
       <LoadingScreen />
     );
   }
-  const adaptToClient = (film) =>{
-    const adaptedFilm = Object.assign(
-        {},
-        promoFilm,
-        {
-          backgroundImage: film.background_image,
-          posterImage: film.poster_image
-        }
-    );
-    delete adaptedFilm.background_image;
-    delete adaptedFilm.poster_image;
 
-    return adaptedFilm;
-  };
-
-  const {name, genre, released, backgroundImage, posterImage} = adaptToClient(promoFilm);
+  const {id, name, genre, released, backgroundImage, posterImage} = adaptToClientFilm(promoFilm);
 
   return (
     <React.Fragment>
@@ -73,18 +60,18 @@ const PromoFilm = () => {
             </p>
 
             <div className="movie-card__buttons">
-              <button className="btn btn--play movie-card__button" type="button">
+              <Link to={`/player/${id}`} className="btn btn--play movie-card__button" type="button">
                 <svg viewBox="0 0 19 19" width="19" height="19">
                   <use xlinkHref="#play-s"></use>
                 </svg>
                 <span>Play</span>
-              </button>
-              <button className="btn btn--list movie-card__button" type="button">
+              </Link>
+              <Link to={`/mylist`} className="btn btn--list movie-card__button" type="button">
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"></use>
                 </svg>
                 <span>My list</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -95,13 +82,13 @@ const PromoFilm = () => {
 
 PromoFilm.propTypes = {
   promoFilm: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     posterImage: PropTypes.string.isRequired,
     backgroundImage: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
     released: PropTypes.number.isRequired
   }),
-  isPromoFilmLoaded: PropTypes.bool.isRequired,
   onLoadPromoFilm: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired
 };

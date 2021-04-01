@@ -2,18 +2,18 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useParams, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchFilm, fetchFilms} from '../../store/api-actions';
+import {fetchFilm, fetchFilms, changeFavoriteFilmStatus} from '../../store/api-actions';
 import LoadingScreen from '../loading/loading';
-import {AuthorizationStatus} from '../../const';
+import {AuthorizationStatus, SIMILAR_FILMS_COUNTER} from '../../const';
 import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
 import FilmList from '../films-list/films-list';
 import FilmTabs from './film-tabs';
-
+import {adaptToClientFilm} from '../../services/adapted-films';
 
 const Film = () => {
 
-  const {film, films, isFilmLoaded, onLoadFilm} = useSelector((state) => state.DATA);
+  const {film, films, isFilmLoaded, onLoadFilms} = useSelector((state) => state.DATA);
   const {authorizationStatus} = useSelector((state) => state.USER);
 
   const dispatch = useDispatch();
@@ -22,21 +22,20 @@ const Film = () => {
   useEffect(() => {
     dispatch(fetchFilm(filmId));
     dispatch(fetchFilms());
-  }, [onLoadFilm]);
+  }, [filmId, onLoadFilms]);
 
   if (!isFilmLoaded) {
     return (
       <LoadingScreen />
     );
   }
-  const {name, poster_image, background_image, genre, released} = film;
-
+  const {id, name, posterImage, backgroundImage, genre, released, isFavorite} = adaptToClientFilm(film);
   return (
     <React.Fragment>
       <section className="movie-card movie-card--full">
         <div className="movie-card__hero">
           <div className="movie-card__bg">
-            <img src={background_image} alt={name} />
+            <img src={backgroundImage} alt={name} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -63,19 +62,22 @@ const Film = () => {
               </p>
 
               <div className="movie-card__buttons">
-                <button className="btn btn--play movie-card__button" type="button">
+                <Link to={`/player/${id}`} className="btn btn--play movie-card__button" type="button">
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
                   <span>Play</span>
-                </button>
-                <button className="btn btn--list movie-card__button" type="button">
+                </Link>
+                <button
+                  onClick = {() => dispatch(changeFavoriteFilmStatus(id, Number(!isFavorite)))}
+                  className="btn btn--list movie-card__button"
+                  type="button">
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref="#add"></use>
                   </svg>
                   <span>My list</span>
                 </button>
-                <a href="add-review.html" className="btn movie-card__button">Add review</a>
+                {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`/films/${id}/addreview`} className="btn movie-card__button">Add review</Link> : ``}
               </div>
             </div>
           </div>
@@ -84,7 +86,7 @@ const Film = () => {
         <div className="movie-card__wrap movie-card__translate-top">
           <div className="movie-card__info">
             <div className="movie-card__poster movie-card__poster--big">
-              <img src={poster_image} alt={name} width="218" height="327" />
+              <img src={posterImage} alt={name} width="218" height="327" />
             </div>
 
             <FilmTabs film={film} />
@@ -97,7 +99,7 @@ const Film = () => {
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__movies-list">
-            <FilmList films={films.filter((item) => item.genre === film.genre).slice(0, 4)}/>
+            <FilmList films={films.filter((item) => item.genre === film.genre).slice(0, SIMILAR_FILMS_COUNTER)}/>
           </div>
         </section>
 

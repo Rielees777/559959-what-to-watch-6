@@ -1,5 +1,5 @@
 
-export const adaptToClient = (film) => {
+export const adaptToClientFilm = (film) => {
   const adaptedFilm = Object.assign(
       {},
       film,

@@ -33,7 +33,7 @@ const App = () => {
           path="/mylist"
           render={() => <MyList />}
         />
-        <Route exact path="/player/:id">
+        <Route exact path="/player/:filmId">
           <Player />
         </Route>
         <Route >

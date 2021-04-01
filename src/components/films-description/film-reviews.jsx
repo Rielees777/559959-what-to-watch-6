@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {fetchReviews} from '../../store/api-actions';
 import Review from '../review/review';
 import LoadingScreen from '../loading/loading';
+import PropTypes from 'prop-types';
 
 const FilmReviews = ({film}) => {
   const {reviews, isReviewsLoaded} = useSelector((state) => state.DATA);
@@ -47,6 +48,11 @@ const FilmReviews = ({film}) => {
       </div>
     </React.Fragment>
   );
+};
+FilmReviews.propTypes = {
+  film: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
 };
 
 export default FilmReviews;

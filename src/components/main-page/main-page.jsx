@@ -11,18 +11,24 @@ import {FILMS_COUNT_PER_STEP} from '../../const';
 const MainPage = () => {
   const [filmsCount, setFilmsCount] = useState(FILMS_COUNT_PER_STEP);
   const handleLoadMoreButton = () => setFilmsCount((currentCount) => currentCount + FILMS_COUNT_PER_STEP);
-  const {films, isFilmsLoaded, onLoadFilms} = useSelector((state) => state.DATA);
+  const {films, currentFilter, isFilmsLoaded} = useSelector((state) => state.DATA);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchFilms());
-  }, [onLoadFilms]);
+  }, [isFilmsLoaded]);
 
   if (!isFilmsLoaded) {
     return (
       <LoadingScreen />
     );
   }
-
+  const getFiltredFilms = () => {
+    if (currentFilter === `All genres`) {
+      return films;
+    } else {
+      return films.filter((item) => currentFilter === item.genre);
+    }
+  };
   return (
     <React.Fragment>
       <section className="movie-card">
@@ -33,8 +39,7 @@ const MainPage = () => {
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
           <GenreFilter />
-
-          <FilmsList films={films.slice(0, filmsCount)}/>
+          <FilmsList films={getFiltredFilms().slice(0, filmsCount)}/>
           {filmsCount < films.length && <LoadMoreButton onLoadMoreFilms={handleLoadMoreButton}/>}
 
         </section>

@@ -3,6 +3,8 @@ import {ActionType} from '../action';
 const initialState = {
   currentFilter: `All genres`,
   films: [],
+  filtredFilms: [],
+  favoriteFilms: [],
   isFilmsLoaded: false
 };
 
@@ -12,6 +14,17 @@ const loadData = (state = initialState, action) => {
       return {
         ...state,
         currentFilter: action.payload
+      };
+    case ActionType.GET_FILTRED_FILMS:
+      return {
+        ...state,
+        filtredFilms: action.payload,
+      };
+    case ActionType.LOAD_FAVORITE_FILMS:
+      return {
+        ...state,
+        favoriteFilms: action.payload,
+        isFavoriteFilmsLoaded: true
       };
     case ActionType.LOAD_FILMS:
       return {

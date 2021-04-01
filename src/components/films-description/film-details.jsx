@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {adaptToClientFilm} from '../../services/adapted-films';
 
 const FilmDetails = ({film}) => {
 
-  const {genre, director, starring, runtime, released} = film;
+  const {genre, director, starring, runtime, released} = adaptToClientFilm(film);
   const convertTime = (time) => {
     return `${Math.floor(time / 60) ? Math.floor(time / 60) + `h` : ``} ${time % 60 + `m`}`;
   };
@@ -40,4 +42,14 @@ const FilmDetails = ({film}) => {
   );
 };
 
+FilmDetails.propTypes = {
+  film: PropTypes.shape({
+    genre: PropTypes.string.isRequired,
+    released: PropTypes.number.isRequired,
+    director: PropTypes.string.isRequired,
+    starring: PropTypes.string.isRequired,
+    runtime: PropTypes.string.isRequired,
+  }),
+
+};
 export default FilmDetails;

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import FilmOverview from './film-overview';
 import FilmDetails from './film-details';
@@ -58,6 +59,10 @@ const FilmTabs = ({film}) => {
       {getActiveTab(activeTab)}
     </div>
   );
+};
+
+FilmTabs.propTypes = {
+  film: PropTypes.object.isRequired,
 };
 
 export default FilmTabs;
