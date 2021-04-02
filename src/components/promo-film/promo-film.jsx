@@ -8,6 +8,7 @@ import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
 import {AuthorizationStatus} from '../../const';
 import {adaptToClientFilm} from '../../services/adapted-films';
+import Logotype from '../logotype/logotype';
 
 const PromoFilm = () => {
   const {promoFilm, isPromoFilmLoaded, onLoadPromoFilm} = useSelector((state) => state.DATA);
@@ -34,13 +35,7 @@ const PromoFilm = () => {
       <h1 className="visually-hidden">WTW</h1>
 
       <header className="page-header movie-card__head">
-        <div className="logo">
-          <a className="logo__link">
-            <span className="logo__letter logo__letter--1">W</span>
-            <span className="logo__letter logo__letter--2">T</span>
-            <span className="logo__letter logo__letter--3">W</span>
-          </a>
-        </div>
+        <Logotype />
 
         {authorizationStatus === AuthorizationStatus.NO_AUTH
           ? <GuestUser /> : <AuthorizedUser />}

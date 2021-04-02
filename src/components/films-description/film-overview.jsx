@@ -21,7 +21,7 @@ const FilmOverview = ({film}) => {
 
         <p className="movie-card__director"><strong>Director: {director}</strong></p>
 
-        <p className="movie-card__starring"><strong>Starring: {starring + `,`}</strong></p>
+        <p className="movie-card__starring"><strong>Starring: {starring.join(`, `)}</strong></p>
       </div>
     </React.Fragment>
   );
