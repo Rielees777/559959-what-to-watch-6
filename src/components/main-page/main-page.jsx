@@ -1,32 +1,34 @@
-import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import FilmsList from '../films-list/films-list';
 import PromoFilm from '../promo-film/promo-film';
 import GenreFilter from '../genre-filter/genre-filter';
 import {fetchFilms} from '../../store/api-actions';
 import LoadingScreen from '../loading/loading';
+import LoadMoreButton from '../load-more-button/load-more-button';
+import {FILMS_COUNT_PER_STEP} from '../../const';
 
-const MainPage = (props) => {
-  const {currentFilter, films, isFilmsLoaded, onLoadFilms} = props;
-
+const MainPage = () => {
+  const [filmsCount, setFilmsCount] = useState(FILMS_COUNT_PER_STEP);
+  const handleLoadMoreButton = () => setFilmsCount((currentCount) => currentCount + FILMS_COUNT_PER_STEP);
+  const {films, currentFilter, isFilmsLoaded} = useSelector((state) => state.DATA);
+  const dispatch = useDispatch();
   useEffect(() => {
-    onLoadFilms();
-  }, [onLoadFilms]);
+    dispatch(fetchFilms());
+  }, [isFilmsLoaded]);
 
-  const filtredFilms = () => {
-    if (currentFilter === `All genres`) {
-      return films;
-    } else {
-      return films.filter((film) => film.genre === currentFilter);
-    }
-  };
   if (!isFilmsLoaded) {
     return (
       <LoadingScreen />
     );
   }
-
+  const getFiltredFilms = () => {
+    if (currentFilter === `All genres`) {
+      return films;
+    } else {
+      return films.filter((item) => currentFilter === item.genre);
+    }
+  };
   return (
     <React.Fragment>
       <section className="movie-card">
@@ -37,8 +39,8 @@ const MainPage = (props) => {
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
           <GenreFilter />
-
-          <FilmsList films={filtredFilms()}/>
+          <FilmsList films={getFiltredFilms().slice(0, filmsCount)}/>
+          {filmsCount < films.length && <LoadMoreButton onLoadMoreFilms={handleLoadMoreButton}/>}
 
         </section>
 
@@ -60,25 +62,4 @@ const MainPage = (props) => {
   );
 };
 
-MainPage.propTypes = {
-  films: PropTypes.array.isRequired,
-  isFilmsLoaded: PropTypes.bool.isRequired,
-  onLoadFilms: PropTypes.func.isRequired,
-  currentFilter: PropTypes.string.isRequired,
-};
-
-
-const mapStateToProps = (state) => ({
-  films: state.films,
-  isFilmsLoaded: state.isFilmsLoaded,
-  currentFilter: state.currentFilter
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onLoadFilms() {
-    dispatch(fetchFilms());
-  }
-});
-
-export {MainPage};
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default MainPage;

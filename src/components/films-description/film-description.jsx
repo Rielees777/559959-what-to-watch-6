@@ -1,19 +1,41 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {useParams} from 'react-router-dom';
+import {useParams, Link} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {fetchFilm, fetchFilms, changeFavoriteFilmStatus} from '../../store/api-actions';
+import LoadingScreen from '../loading/loading';
+import {AuthorizationStatus, SIMILAR_FILMS_COUNTER} from '../../const';
+import GuestUser from '../guest-user/guest-user';
+import AuthorizedUser from '../authorized-user/authorized-user';
+import FilmList from '../films-list/films-list';
+import FilmTabs from './film-tabs';
+import {adaptToClientFilm} from '../../services/adapted-films';
 
+const Film = () => {
 
-const Film = (props) => {
-  const {films} = props;
+  const {film, films, isFilmLoaded, onLoadFilms} = useSelector((state) => state.DATA);
+  const {authorizationStatus} = useSelector((state) => state.USER);
+
+  const dispatch = useDispatch();
   let {filmId} = useParams();
-  const {id, name, posterImage, backgroundImage, description, genre, released, rating, scoresCount, director, starring} = films[filmId];
-  const additionalFilms = films.slice(0, 4);
+
+  useEffect(() => {
+    dispatch(fetchFilm(filmId));
+    dispatch(fetchFilms());
+  }, [filmId, onLoadFilms]);
+
+  if (!isFilmLoaded) {
+    return (
+      <LoadingScreen />
+    );
+  }
+  const {id, name, posterImage, backgroundImage, genre, released, isFavorite} = adaptToClientFilm(film);
   return (
     <React.Fragment>
       <section className="movie-card movie-card--full">
         <div className="movie-card__hero">
           <div className="movie-card__bg">
-            <img src={backgroundImage} alt="The Grand Budapest Hotel" />
+            <img src={backgroundImage} alt={name} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -27,11 +49,8 @@ const Film = (props) => {
               </a>
             </div>
 
-            <div className="user-block">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-              </div>
-            </div>
+            {authorizationStatus === AuthorizationStatus.NO_AUTH
+              ? <GuestUser /> : <AuthorizedUser />}
           </header>
 
           <div className="movie-card__wrap">
@@ -43,19 +62,22 @@ const Film = (props) => {
               </p>
 
               <div className="movie-card__buttons">
-                <button className="btn btn--play movie-card__button" type="button">
+                <Link to={`/player/${id}`} className="btn btn--play movie-card__button" type="button">
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
                   <span>Play</span>
-                </button>
-                <button className="btn btn--list movie-card__button" type="button">
+                </Link>
+                <button
+                  onClick = {() => dispatch(changeFavoriteFilmStatus(id, Number(!isFavorite)))}
+                  className="btn btn--list movie-card__button"
+                  type="button">
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref="#add"></use>
                   </svg>
                   <span>My list</span>
                 </button>
-                <a href="add-review.html" className="btn movie-card__button">Add review</a>
+                {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`/films/${id}/addreview`} className="btn movie-card__button">Add review</Link> : ``}
               </div>
             </div>
           </div>
@@ -64,41 +86,10 @@ const Film = (props) => {
         <div className="movie-card__wrap movie-card__translate-top">
           <div className="movie-card__info">
             <div className="movie-card__poster movie-card__poster--big">
-              <img src={posterImage} alt="The Grand Budapest Hotel poster" width="218" height="327" />
+              <img src={posterImage} alt={name} width="218" height="327" />
             </div>
 
-            <div className="movie-card__desc">
-              <nav className="movie-nav movie-card__nav">
-                <ul className="movie-nav__list">
-                  <li className="movie-nav__item movie-nav__item--active">
-                    <a href="#" className="movie-nav__link">Overview</a>
-                  </li>
-                  <li className="movie-nav__item">
-                    <a href="#" className="movie-nav__link">Details</a>
-                  </li>
-                  <li className="movie-nav__item">
-                    <a href="#" className="movie-nav__link">Reviews</a>
-                  </li>
-                </ul>
-              </nav>
-              <div className="movie-rating">
-                <div className="movie-rating__score">{rating}</div>
-                <p className="movie-rating__meta">
-                  <span className="movie-rating__level">Very good</span>
-                  <span className="movie-rating__count">{scoresCount} ratings</span>
-                </p>
-              </div>
-
-              <div className="movie-card__text">
-                <p>{description}</p>
-
-                <p>Gustave prides himself on providing first-class service to the hotel`s guests, including satisfying the sexual needs of the many elderly women who stay there. When one of Gustave`s lovers dies mysteriously, Gustave finds himself the recipient of a priceless painting and the chief suspect in her murder.</p>
-
-                <p className="movie-card__director"><strong>Director: {director}</strong></p>
-
-                <p className="movie-card__starring"><strong>Starring: {starring + `,`}</strong></p>
-              </div>
-            </div>
+            <FilmTabs film={film} />
           </div>
         </div>
       </section>
@@ -108,16 +99,7 @@ const Film = (props) => {
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__movies-list">
-            {additionalFilms.map((film) => (
-              <article key={id} className="small-movie-card catalog__movies-card">
-                <div className="small-movie-card__image">
-                  <img src={film.posterImage} alt={film.name} width="280" height="175" />
-                </div>
-                <h3 className="small-movie-card__title">
-                  <a className="small-movie-card__link" href="movie-page.html">{film.name}</a>
-                </h3>
-              </article>
-            ))}
+            <FilmList films={films.filter((item) => item.genre === film.genre).slice(0, SIMILAR_FILMS_COUNTER)}/>
           </div>
         </section>
 
@@ -139,22 +121,19 @@ const Film = (props) => {
   );
 };
 Film.propTypes = {
-  films: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        posterImage: PropTypes.string.isRequired,
-        backgroundImage: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        genre: PropTypes.string.isRequired,
-        released: PropTypes.number.isRequired,
-        rating: PropTypes.number.isRequired,
-        scoresCount: PropTypes.number.isRequired,
-        director: PropTypes.string.isRequired,
-        starring: PropTypes.string.isRequired,
-      })
-  ),
-  reviews: PropTypes.array.isRequired,
+  film: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    posterImage: PropTypes.string.isRequired,
+    backgroundImage: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    genre: PropTypes.string.isRequired,
+    released: PropTypes.number.isRequired,
+    rating: PropTypes.number.isRequired,
+    scoresCount: PropTypes.number.isRequired,
+    director: PropTypes.string.isRequired,
+    starring: PropTypes.string.isRequired,
+  }),
 
 };
 
