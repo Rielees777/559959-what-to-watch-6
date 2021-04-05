@@ -12,17 +12,17 @@ export const fetchPromoFilm = () => (dispatch, _getState, api) => (
 );
 
 
-export const checkAuth = () => (dispatch, _getState, api) => {
+export const checkAuth = () => (dispatch, _getState, api) => (
   api.get(`/login`)
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
-    .catch(() => {});
-};
+    .catch(() => {})
+);
 
-export const login = ({login: email, password}) => (dispatch, _getState, api) => {
+export const login = ({login: email, password}) => (dispatch, _getState, api) => (
   api.post(`/login`, {email, password})
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
-    .then(() => dispatch(redirectToRoute(`/`)));
-};
+    .then(() => dispatch(redirectToRoute(`/`)))
+);
 export const fetchFavoriteFilms = () => (dispatch, _getState, api) => (
   api.get(`/favorite`)
     .then(({data}) => dispatch(loadFavoriteFilms(data)))

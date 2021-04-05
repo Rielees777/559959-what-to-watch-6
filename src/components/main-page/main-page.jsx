@@ -11,7 +11,16 @@ import {FILMS_COUNT_PER_STEP} from '../../const';
 
 const MainPage = () => {
   const [filmsCount, setFilmsCount] = useState(FILMS_COUNT_PER_STEP);
-  const handleLoadMoreButton = () => setFilmsCount((currentCount) => currentCount + FILMS_COUNT_PER_STEP);
+  const [loadMoreButtonVisible, setLoadMoreButtonVisible] = useState(true);
+  const handleLoadMoreButton = () => {
+    if (filmsCount + FILMS_COUNT_PER_STEP < films.length) {
+      setFilmsCount(filmsCount + FILMS_COUNT_PER_STEP);
+      return;
+    }
+
+    setFilmsCount(films.length);
+    setLoadMoreButtonVisible(false);
+  };
   const {films, currentFilter, isFilmsLoaded} = useSelector((state) => state.DATA);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -23,6 +32,8 @@ const MainPage = () => {
       <LoadingScreen />
     );
   }
+
+
   const getFiltredFilms = () => {
     if (currentFilter === `All genres`) {
       return films;
@@ -41,7 +52,7 @@ const MainPage = () => {
 
           <GenreFilter />
           <FilmsList films={getFiltredFilms().slice(0, filmsCount)}/>
-          {filmsCount < films.length && <LoadMoreButton onLoadMoreFilms={handleLoadMoreButton}/>}
+          {loadMoreButtonVisible && <LoadMoreButton onLoadMoreFilms={handleLoadMoreButton}/>}
 
         </section>
 

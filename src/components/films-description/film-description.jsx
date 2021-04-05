@@ -10,6 +10,7 @@ import AuthorizedUser from '../authorized-user/authorized-user';
 import FilmList from '../films-list/films-list';
 import FilmTabs from './film-tabs';
 import {adaptToClientFilm} from '../../services/adapted-films';
+import Logotype from '../logotype/logotype';
 
 const Film = () => {
 
@@ -29,10 +30,10 @@ const Film = () => {
       <LoadingScreen />
     );
   }
-  const {id, name, posterImage, backgroundImage, genre, released, isFavorite} = adaptToClientFilm(film);
+  const {id, name, posterImage, backgroundImage, genre, released, backgroundColor, isFavorite} = adaptToClientFilm(film);
   return (
     <React.Fragment>
-      <section className="movie-card movie-card--full">
+      <section className="movie-card movie-card--full" style={{backgroundColor: `${backgroundColor}`}}>
         <div className="movie-card__hero">
           <div className="movie-card__bg">
             <img src={backgroundImage} alt={name} />
@@ -41,13 +42,7 @@ const Film = () => {
           <h1 className="visually-hidden">WTW</h1>
 
           <header className="page-header movie-card__head">
-            <div className="logo">
-              <a href="main.html" className="logo__link">
-                <span className="logo__letter logo__letter--1">W</span>
-                <span className="logo__letter logo__letter--2">T</span>
-                <span className="logo__letter logo__letter--3">W</span>
-              </a>
-            </div>
+            <Logotype />
 
             {authorizationStatus === AuthorizationStatus.NO_AUTH
               ? <GuestUser /> : <AuthorizedUser />}

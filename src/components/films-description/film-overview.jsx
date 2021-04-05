@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {adaptToClientFilm} from '../../services/adapted-films';
+import {RatingCount, RatingName} from '../../const';
 
 const FilmOverview = ({film}) => {
 
   const {description, rating, scoresCount, director, starring} = adaptToClientFilm(film);
-
+  const ratingValue = Object.keys(RatingCount).find((item) => RatingCount[item] >= rating);
   return (
     <React.Fragment>
       <div className="movie-rating">
         <div className="movie-rating__score">{rating}</div>
         <p className="movie-rating__meta">
-          <span className="movie-rating__level">Very good</span>
+          <span className="movie-rating__level">{RatingName[ratingValue]}</span>
           <span className="movie-rating__count">{scoresCount} ratings</span>
         </p>
       </div>

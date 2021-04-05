@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchPromoFilm} from '../../store/api-actions';
+import {fetchPromoFilm, changeFavoriteFilmStatus} from '../../store/api-actions';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LoadingScreen from '../loading/loading';
@@ -24,7 +24,7 @@ const PromoFilm = () => {
     );
   }
 
-  const {id, name, genre, released, backgroundImage, posterImage} = adaptToClientFilm(promoFilm);
+  const {id, name, genre, released, backgroundImage, posterImage, isFavorite} = adaptToClientFilm(promoFilm);
 
   return (
     <React.Fragment>
@@ -53,7 +53,6 @@ const PromoFilm = () => {
               <span className="movie-card__genre">{genre}</span>
               <span className="movie-card__year">{released}</span>
             </p>
-
             <div className="movie-card__buttons">
               <Link to={`/player/${id}`} className="btn btn--play movie-card__button" type="button">
                 <svg viewBox="0 0 19 19" width="19" height="19">
@@ -61,12 +60,15 @@ const PromoFilm = () => {
                 </svg>
                 <span>Play</span>
               </Link>
-              <Link to={`/mylist`} className="btn btn--list movie-card__button" type="button">
+              <button
+                onClick = {() => dispatch(changeFavoriteFilmStatus(id, Number(!isFavorite)))}
+                className="btn btn--list movie-card__button"
+                type="button">
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"></use>
                 </svg>
                 <span>My list</span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>

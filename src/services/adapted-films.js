@@ -16,6 +16,7 @@ export const adaptToClientFilm = (film) => {
         starring: film.starring,
         previewImage: film.preview_image,
         backgroundImage: film.background_image,
+        backgroundColor: film.background_color,
         posterImage: film.poster_image,
         videoLink: film.video_link,
         previewVideoLink: film.preview_video_link,
