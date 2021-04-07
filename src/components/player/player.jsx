@@ -1,37 +1,34 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchFilm} from '../../store/api-actions';
 import LoadingScreen from '../loading/loading';
-import {adaptToClientFilm} from '../../services/adapted-films';
 
 const Player = () => {
   const videoRef = useRef();
-  const [videoStart, setStartVideo] = useState(false);
+  const [videoStart, setStartVideo] = useState(true);
   const [timeLinePosition, setTimeLinePosition] = useState(0);
   const [currentime, setCurrentTime] = useState(``);
   const [fullScreenState, setFullScreenVideo] = useState(true);
-  const {film, isFilmLoaded} = useSelector((state) => state.DATA);
   const history = useHistory();
-
   const dispatch = useDispatch();
+  let {filmId} = useParams();
 
-  useEffect(() => {
-    dispatch(fetchFilm());
-  }, [isFilmLoaded]);
 
-  if (!isFilmLoaded) {
-    return (
-      <LoadingScreen />
-    );
-  }
-  const {id, videoLink, previewImage} = adaptToClientFilm(film);
+  const {film, isFilmLoaded} = useSelector((state) => state.DATA);
+  const {videoLink, previewImage} = film;
+
   const getTime = (time) => {
     let h = time / 3600 ^ 0;
     let m = (time - h * 3600) / 60 ^ 0;
     let s = time - h * 3600 - m * 60;
     return (h < 10 ? `0` + h : h) + `:` + (m) + `:` + (s);
   };
+
+  useEffect(() => {
+    dispatch(fetchFilm(filmId));
+  }, [filmId]);
+
   useEffect(() => {
     if (videoStart) {
       videoRef.current.play();
@@ -59,6 +56,12 @@ const Player = () => {
     setCurrentTime(Math.floor(videoRef.current.duration - videoRef.current.currentTime));
   };
 
+  if (!isFilmLoaded) {
+    return (
+      <LoadingScreen />
+    );
+  }
+
   return (
     <div className="player">
       <video
@@ -70,7 +73,7 @@ const Player = () => {
         onTimeUpdate={handleTimeLinePosition}
       />
       <button
-        onClick={() => history.push(`/films/${id}`)}
+        onClick={() => history.push(`/films/${filmId}`)}
         type="button"
         className="player__exit">
         Exit

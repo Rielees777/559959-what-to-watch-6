@@ -4,6 +4,7 @@ import {fetchFavoriteFilms} from '../../store/api-actions';
 import FilmCard from '../film-card/film-card';
 import LoadingScreen from '../loading/loading';
 import Logotype from '../logotype/logotype';
+import {adaptToClientFilm} from "../../services/adapted-films";
 
 const MyList = () => {
   const {favoriteFilms, isFavoriteFilmsLoaded} = useSelector((state) => state.DATA);
@@ -18,6 +19,7 @@ const MyList = () => {
       <LoadingScreen />
     );
   }
+
   return (
     <div className="user-page">
       <header className="page-header user-page__head">
@@ -35,7 +37,7 @@ const MyList = () => {
       <section className="catalog">
         <h2 className="catalog__title visually-hidden">Catalog</h2>
         <div className="catalog__movies-list">
-          {favoriteFilms.map((film) => <FilmCard key={film.id} {...film}/>)}
+          {favoriteFilms.map((film) => <FilmCard key={film.id} {...adaptToClientFilm(film)}/>)}
         </div>
       </section>
 

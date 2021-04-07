@@ -11,22 +11,22 @@ const VideoPlayer = ({src, poster}) => {
   const [videoReset, setResetVideo] = useState(false);
 
   useEffect(() => {
-    if (videoStart) {
+    if (videoStart && videoRef.current) {
       timerId = setTimeout(() => {
         videoRef.current.play();
       }, VIDEO_DELAY);
       return;
     }
-  }, [videoStart]
+  }, [videoStart, videoRef]
   );
 
   useEffect(() => {
-    if (videoReset) {
+    if (videoReset && videoRef.current) {
       clearTimeout(timerId);
       videoRef.current.load();
     }
     return;
-  }, [videoReset]
+  }, [videoReset, videoRef]
   );
 
   return (

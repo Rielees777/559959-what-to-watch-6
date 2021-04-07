@@ -1,13 +1,11 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchPromoFilm, changeFavoriteFilmStatus} from '../../store/api-actions';
+import {fetchPromoFilm, changeFavoriteFilmStatus, fetchFilm} from '../../store/api-actions';
 import {Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import LoadingScreen from '../loading/loading';
 import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
-import {AuthorizationStatus} from '../../const';
-import {adaptToClientFilm} from '../../services/adapted-films';
+import {AuthorizationStatus, firstFilm} from '../../const';
 import Logotype from '../logotype/logotype';
 
 const PromoFilm = () => {
@@ -16,6 +14,7 @@ const PromoFilm = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchPromoFilm());
+    dispatch(fetchFilm(firstFilm));
   }, [onLoadPromoFilm]
   );
   if (!isPromoFilmLoaded) {
@@ -24,7 +23,7 @@ const PromoFilm = () => {
     );
   }
 
-  const {id, name, genre, released, backgroundImage, posterImage, isFavorite} = adaptToClientFilm(promoFilm);
+  const {id, name, genre, released, backgroundImage, posterImage, isFavorite} = promoFilm;
 
   return (
     <React.Fragment>
@@ -75,19 +74,6 @@ const PromoFilm = () => {
       </div>
     </React.Fragment>
   );
-};
-
-PromoFilm.propTypes = {
-  promoFilm: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    posterImage: PropTypes.string.isRequired,
-    backgroundImage: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    released: PropTypes.number.isRequired
-  }),
-  onLoadPromoFilm: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired
 };
 
 export default PromoFilm;

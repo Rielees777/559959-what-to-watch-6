@@ -1,21 +1,27 @@
 import {loadFilms, loadFilm, loadPromoFilm, requireAuthorization, loadFavoriteFilms, redirectToRoute, loadReviews} from "./action";
 import {AuthorizationStatus} from "../const";
+import {adaptToClientFilm} from "../services/adapted-films";
+import browserHistory from "../browser-history";
 
 export const fetchFilms = () => (dispatch, _getState, api) => (
   api.get(`/films`)
-    .then(({data}) => dispatch(loadFilms(data)))
+    .then(({data}) => dispatch(loadFilms(data.map(adaptToClientFilm))))
 );
 
 export const fetchPromoFilm = () => (dispatch, _getState, api) => (
   api.get(`/films/promo`)
-    .then(({data}) => dispatch(loadPromoFilm(data)))
+    .then(({data}) => dispatch(loadPromoFilm(adaptToClientFilm(data))))
 );
 
 
 export const checkAuth = () => (dispatch, _getState, api) => (
   api.get(`/login`)
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
-    .catch(() => {})
+    .catch(({response}) => {
+      if (response.status === 404) {
+        browserHistory.push(`/404`);
+      }
+    })
 );
 
 export const login = ({login: email, password}) => (dispatch, _getState, api) => (
@@ -33,7 +39,8 @@ export const changeFavoriteFilmStatus = (filmId, favoriteFilmStatus) => (dispatc
 };
 export const fetchFilm = (filmId) => (dispatch, _getState, api) => (
   api.get(`/films/${filmId}`)
-    .then(({data}) => dispatch(loadFilm(data)))
+    .then(({data}) => dispatch(loadFilm(adaptToClientFilm(data))))
+    .catch(() => {})
 );
 export const addReview = (filmId, rating, comment) => (dispatch, _getState, api) => {
   api.post(`/comments/${filmId}`, {rating, comment})

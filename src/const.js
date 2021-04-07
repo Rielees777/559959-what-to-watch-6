@@ -3,6 +3,7 @@ export const VIDEO_DELAY = 1000;
 
 export const FILMS_COUNT_PER_STEP = 8;
 export const SIMILAR_FILMS_COUNTER = 4;
+export const firstFilm = 1;
 
 export const AuthorizationStatus = {
   AUTH: `AUTH`,

@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {adaptToClientFilm} from '../../services/adapted-films';
 import {RatingCount, RatingName} from '../../const';
 
 const FilmOverview = ({film}) => {
 
-  const {description, rating, scoresCount, director, starring} = adaptToClientFilm(film);
+  const {description, rating, scoresCount, director, starring} = film;
   const ratingValue = Object.keys(RatingCount).find((item) => RatingCount[item] >= rating);
   return (
     <React.Fragment>
@@ -34,7 +33,7 @@ FilmOverview.propTypes = {
     rating: PropTypes.number.isRequired,
     scoresCount: PropTypes.number.isRequired,
     director: PropTypes.string.isRequired,
-    starring: PropTypes.string.isRequired,
+    starring: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
 
 };
