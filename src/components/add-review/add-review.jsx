@@ -5,13 +5,32 @@ import {fetchFilm, addReview} from '../../store/api-actions';
 import LoadingScreen from '../loading/loading';
 import {useParams} from 'react-router-dom';
 import {ratingStarsCount} from '../../const';
-import {adaptToClientFilm} from '../../services/adapted-films';
+import Logotype from '../logotype/logotype';
+
+const MessageLength = {
+  MAX: 400,
+  MIN: 50
+};
+
+
+const runTextAriaValidation = (evt) => {
+  let textArea = evt.target;
+  let textValue = textArea.value.length;
+  if (textValue < MessageLength.MIN) {
+    textArea.setCustomValidity(`Min text length is: ${MessageLength.MIN}`);
+  } else if (textValue > MessageLength.MAX) {
+    textArea.setCustomValidity(`Max text length is: ${MessageLength.MAX}`);
+  } else {
+    textArea.setCustomValidity(``);
+  }
+};
 
 const AddReview = () => {
   let {filmId} = useParams();
   const [comment, setComment] = useState(``);
   const handleTextareaChange = (evt) => {
     evt.preventDefault();
+    runTextAriaValidation(evt);
     setComment(evt.target.value);
   };
 
@@ -24,6 +43,7 @@ const AddReview = () => {
   const handleFormSubmit = (evt) => {
     evt.preventDefault();
     dispatch(addReview(filmId, rating, comment));
+
   };
 
   const {film, isFilmLoaded} = useSelector((state) => state.DATA);
@@ -38,10 +58,10 @@ const AddReview = () => {
     );
   }
 
-  const {backgroundImage, name, posterImage} = adaptToClientFilm(film);
+  const {backgroundImage, name, posterImage, backgroundColor} = film;
 
   return (
-    <section className="movie-card movie-card--full">
+    <section className="movie-card movie-card--full" style={{backgroundColor: `${backgroundColor}`}}>
       <div className="movie-card__header">
         <div className="movie-card__bg">
           <img src={backgroundImage} alt={name} />
@@ -50,13 +70,7 @@ const AddReview = () => {
         <h1 className="visually-hidden">WTW</h1>
 
         <header className="page-header">
-          <div className="logo">
-            <a href="main.html" className="logo__link">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
+          <Logotype />
 
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
@@ -113,11 +127,13 @@ const AddReview = () => {
               className="add-review__textarea"
               name="review-text"
               id="review-text"
-              placeholder="Review text"/>
+              placeholder="Review text"
+              minLength="50"
+              maxLength="400"
+            />
             <div className="add-review__submit">
               <button className="add-review__btn" type="submit">Post</button>
             </div>
-
           </div>
         </form>
       </div>
@@ -134,7 +150,5 @@ AddReview.propTypes = {
         backgroundImage: PropTypes.string.isRequired,
       })
   ),
-  reviews: PropTypes.array.isRequired,
-
 };
 export default AddReview;

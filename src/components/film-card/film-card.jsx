@@ -2,11 +2,11 @@ import React from 'react';
 import {useHistory} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import VideoPlayer from '../video-payer/video-player';
-import {adaptToClientFilm} from '../../services/adapted-films';
+
 
 const FilmCard = (films) => {
   const history = useHistory();
-  const {id, name, previewImage, previewVideoLink} = adaptToClientFilm(films);
+  const {id, name, previewImage, previewVideoLink} = films;
   return (
     <article
       onClick={() => history.push(`/films/${id}`)}

@@ -25,7 +25,7 @@ Review.propTypes = {
   rating: PropTypes.number.isRequired,
   comment: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
-  date: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
 
 };
 

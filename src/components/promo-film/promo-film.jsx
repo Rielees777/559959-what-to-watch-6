@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchPromoFilm} from '../../store/api-actions';
+import {fetchPromoFilm, changeFavoriteFilmStatus, fetchFilm} from '../../store/api-actions';
 import {Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
 import LoadingScreen from '../loading/loading';
 import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
-import {AuthorizationStatus} from '../../const';
-import {adaptToClientFilm} from '../../services/adapted-films';
+import {AuthorizationStatus, firstFilm} from '../../const';
+import Logotype from '../logotype/logotype';
 
 const PromoFilm = () => {
   const {promoFilm, isPromoFilmLoaded, onLoadPromoFilm} = useSelector((state) => state.DATA);
@@ -15,6 +14,7 @@ const PromoFilm = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchPromoFilm());
+    dispatch(fetchFilm(firstFilm));
   }, [onLoadPromoFilm]
   );
   if (!isPromoFilmLoaded) {
@@ -23,7 +23,7 @@ const PromoFilm = () => {
     );
   }
 
-  const {id, name, genre, released, backgroundImage, posterImage} = adaptToClientFilm(promoFilm);
+  const {id, name, genre, released, backgroundImage, posterImage, isFavorite} = promoFilm;
 
   return (
     <React.Fragment>
@@ -34,13 +34,7 @@ const PromoFilm = () => {
       <h1 className="visually-hidden">WTW</h1>
 
       <header className="page-header movie-card__head">
-        <div className="logo">
-          <a className="logo__link">
-            <span className="logo__letter logo__letter--1">W</span>
-            <span className="logo__letter logo__letter--2">T</span>
-            <span className="logo__letter logo__letter--3">W</span>
-          </a>
-        </div>
+        <Logotype />
 
         {authorizationStatus === AuthorizationStatus.NO_AUTH
           ? <GuestUser /> : <AuthorizedUser />}
@@ -58,7 +52,6 @@ const PromoFilm = () => {
               <span className="movie-card__genre">{genre}</span>
               <span className="movie-card__year">{released}</span>
             </p>
-
             <div className="movie-card__buttons">
               <Link to={`/player/${id}`} className="btn btn--play movie-card__button" type="button">
                 <svg viewBox="0 0 19 19" width="19" height="19">
@@ -66,31 +59,21 @@ const PromoFilm = () => {
                 </svg>
                 <span>Play</span>
               </Link>
-              <Link to={`/mylist`} className="btn btn--list movie-card__button" type="button">
+              <button
+                onClick = {() => dispatch(changeFavoriteFilmStatus(id, Number(!isFavorite)))}
+                className="btn btn--list movie-card__button"
+                type="button">
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"></use>
                 </svg>
                 <span>My list</span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </React.Fragment>
   );
-};
-
-PromoFilm.propTypes = {
-  promoFilm: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    posterImage: PropTypes.string.isRequired,
-    backgroundImage: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    released: PropTypes.number.isRequired
-  }),
-  onLoadPromoFilm: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired
 };
 
 export default PromoFilm;

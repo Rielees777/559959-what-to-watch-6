@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
 import {useParams, Link} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchFilm, fetchFilms, changeFavoriteFilmStatus} from '../../store/api-actions';
@@ -9,7 +8,7 @@ import GuestUser from '../guest-user/guest-user';
 import AuthorizedUser from '../authorized-user/authorized-user';
 import FilmList from '../films-list/films-list';
 import FilmTabs from './film-tabs';
-import {adaptToClientFilm} from '../../services/adapted-films';
+import Logotype from '../logotype/logotype';
 
 const Film = () => {
 
@@ -29,10 +28,10 @@ const Film = () => {
       <LoadingScreen />
     );
   }
-  const {id, name, posterImage, backgroundImage, genre, released, isFavorite} = adaptToClientFilm(film);
+  const {name, posterImage, backgroundImage, genre, released, backgroundColor, isFavorite} = film;
   return (
     <React.Fragment>
-      <section className="movie-card movie-card--full">
+      <section className="movie-card movie-card--full" style={{backgroundColor: `${backgroundColor}`}}>
         <div className="movie-card__hero">
           <div className="movie-card__bg">
             <img src={backgroundImage} alt={name} />
@@ -41,13 +40,7 @@ const Film = () => {
           <h1 className="visually-hidden">WTW</h1>
 
           <header className="page-header movie-card__head">
-            <div className="logo">
-              <a href="main.html" className="logo__link">
-                <span className="logo__letter logo__letter--1">W</span>
-                <span className="logo__letter logo__letter--2">T</span>
-                <span className="logo__letter logo__letter--3">W</span>
-              </a>
-            </div>
+            <Logotype />
 
             {authorizationStatus === AuthorizationStatus.NO_AUTH
               ? <GuestUser /> : <AuthorizedUser />}
@@ -62,14 +55,14 @@ const Film = () => {
               </p>
 
               <div className="movie-card__buttons">
-                <Link to={`/player/${id}`} className="btn btn--play movie-card__button" type="button">
+                <Link to={`/player/${filmId}`} className="btn btn--play movie-card__button" type="button">
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
                   <span>Play</span>
                 </Link>
                 <button
-                  onClick = {() => dispatch(changeFavoriteFilmStatus(id, Number(!isFavorite)))}
+                  onClick = {() => dispatch(changeFavoriteFilmStatus(filmId, Number(!isFavorite)))}
                   className="btn btn--list movie-card__button"
                   type="button">
                   <svg viewBox="0 0 19 20" width="19" height="20">
@@ -77,7 +70,7 @@ const Film = () => {
                   </svg>
                   <span>My list</span>
                 </button>
-                {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`/films/${id}/addreview`} className="btn movie-card__button">Add review</Link> : ``}
+                {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`/films/${filmId}/addreview`} className="btn movie-card__button">Add review</Link> : ``}
               </div>
             </div>
           </div>
@@ -119,22 +112,6 @@ const Film = () => {
       </div>
     </React.Fragment>
   );
-};
-Film.propTypes = {
-  film: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    posterImage: PropTypes.string.isRequired,
-    backgroundImage: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    released: PropTypes.number.isRequired,
-    rating: PropTypes.number.isRequired,
-    scoresCount: PropTypes.number.isRequired,
-    director: PropTypes.string.isRequired,
-    starring: PropTypes.string.isRequired,
-  }),
-
 };
 
 export default Film;

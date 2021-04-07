@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {adaptToClientFilm} from '../../services/adapted-films';
+
 
 const FilmDetails = ({film}) => {
 
-  const {genre, director, starring, runtime, released} = adaptToClientFilm(film);
+  const {genre, director, starring, runtime, released} = film;
   const convertTime = (time) => {
     return `${Math.floor(time / 60) ? Math.floor(time / 60) + `h` : ``} ${time % 60 + `m`}`;
   };
-
   return (
     <div className="movie-card__text movie-card__row">
       <div className="movie-card__text-col">
@@ -19,7 +18,7 @@ const FilmDetails = ({film}) => {
         <p className="movie-card__details-item">
           <strong className="movie-card__details-name">Starring</strong>
           <span className="movie-card__details-value">
-            {starring.map((item, index) => <React.Fragment key={`${item}${index}`}>{item + `,`}{<br />}</ React.Fragment>)}
+            {starring.map((item) => <React.Fragment key={`${item}`}>{item + `,`}{<br />}</ React.Fragment>)}
           </span>
         </p>
       </div>
@@ -47,8 +46,8 @@ FilmDetails.propTypes = {
     genre: PropTypes.string.isRequired,
     released: PropTypes.number.isRequired,
     director: PropTypes.string.isRequired,
-    starring: PropTypes.string.isRequired,
-    runtime: PropTypes.string.isRequired,
+    starring: PropTypes.arrayOf(PropTypes.string).isRequired,
+    runtime: PropTypes.number.isRequired,
   }),
 
 };
